@@ -1,1 +1,220 @@
-# grok-beautymed
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>💊 Grok 服薬カレンダー</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --grok-blue: #00d4ff;
+    --grok-purple: #a855f7;
+    --bg: #0a0a0a;
+    --card: #111111;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #0a0a0a, #1a0033);
+    color: #e0e0e0;
+    min-height: 100vh;
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    background: linear-gradient(90deg, var(--grok-blue), var(--grok-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  }
+  
+  .subtitle {
+    text-align: center;
+    color: #888;
+    margin-bottom: 20px;
+    font-size: 15px;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  
+  button {
+    background: rgba(0, 212, 255, 0.15);
+    color: var(--grok-blue);
+    border: 1px solid var(--grok-blue);
+    padding: 12px 20px;
+    border-radius: 9999px;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  
+  button:hover, button:active {
+    background: var(--grok-blue);
+    color: black;
+    transform: scale(1.05);
+  }
+
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    background: var(--card);
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+  }
+  
+  .day-header {
+    text-align: center;
+    padding: 12px 8px;
+    font-weight: bold;
+    color: var(--grok-blue);
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 12px;
+  }
+  
+  .day {
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 12px 6px;
+    text-align: center;
+    min-height: 82px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.2s;
+  }
+  
+  .day:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  }
+  
+  .day.today {
+    background: rgba(0, 212, 255, 0.15);
+    border: 2px solid var(--grok-blue);
+  }
+  
+  .day-num {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .stars {
+    font-size: 22px;
+    line-height: 1;
+  }
+  
+  .taken {
+    animation: glow 2s infinite alternate;
+  }
+  
+  @keyframes glow {
+    from { box-shadow: 0 0 10px rgba(0, 212, 255, 0.4); }
+    to { box-shadow: 0 0 25px rgba(0, 212, 255, 0.8); }
+  }
+
+  .action-btn {
+    background: linear-gradient(90deg, #00d4ff, #a855f7);
+    color: white;
+    border: none;
+    padding: 16px;
+    margin: 12px 0;
+    border-radius: 9999px;
+    font-size: 17px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+  }
+</style>
+</head>
+<body>
+<h1>服薬カレンダー</h1>
+<p class="subtitle">Grokと守る あなたの健康スケジュール</p>
+
+<div class="controls">
+  <button onclick="prevMonth()">← 前月</button>
+  <span id="monthTitle" style="font-size:20px; min-width:140px; text-align:center;"></span>
+  <button onclick="nextMonth()">次月 →</button>
+</div>
+
+<div id="calendar" class="calendar"></div>
+
+<div style="margin-top:30px;">
+  <button class="action-btn" onclick="markTaken('morning')">🌅 朝 飲んだ！ ★</button>
+  <button class="action-btn" onclick="markTaken('evening')">🌙 夜 飲んだ！ ★</button>
+</div>
+
+<script>
+let currentDate = new Date();
+let records = JSON.parse(localStorage.getItem('medRecords')) || {};
+
+function saveRecords() {
+  localStorage.setItem('medRecords', JSON.stringify(records));
+}
+
+function getKey(date) {
+  return date.toISOString().split('T')[0];
+}
+
+function markTaken(time) {
+  const key = getKey(currentDate);
+  if (!records[key]) records[key] = {};
+  records[key][time] = true;
+  saveRecords();
+  renderCalendar();
+  alert(`🚀 ${time === 'morning' ? '朝' : '夜'}の記録完了！ Grokが認めたよ`);
+}
+
+function renderCalendar() {
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  
+  document.getElementById('monthTitle').textContent = `${year}年 ${month+1}月`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  
+  let html = `
+    <div class="day-header">日</div><div class="day-header">月</div>
+    <div class="day-header">火</div><div class="day-header">水</div>
+    <div class="day-header">木</div><div class="day-header">金</div>
+    <div class="day-header">土</div>
+  `;
+
+  for (let i = 0; i < firstDay; i++) html += `<div class="day"></div>`;
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    const key = getKey(date);
+    const dayRecord = records[key] || {};
+    
+    let stars = '';
+    if (dayRecord.morning) stars += '★';
+    if (dayRecord.evening) stars += '★';
+    
+    const isToday = day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
+    
+    html += `
+      <div class="day ${isToday ? 'today taken' : ''}">
+        <div class="day-num">${day}</div>
+        <div class="stars">${stars || '<span style="color:#555">ー</span>'}</div>
+      </div>`;
+  }
+  
+  document.getElementById('calendar').innerHTML = html;
+}
+
+function prevMonth() { currentDate.setMonth(currentDate.getMonth()-1); renderCalendar(); }
+function nextMonth() { currentDate.setMonth(currentDate.getMonth()+1); renderCalendar(); }
+
+renderCalendar();
+</script>
+</body>
+</html>
