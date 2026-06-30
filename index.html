@@ -64,7 +64,7 @@
 </head>
 <body>
 <h1>服薬カレンダー</h1>
-<p class="subtitle">Grokと守る あなたの健康スケジュール</p>
+<p class="subtitle">Grokと美容内服頑張ろうぜ！</p>
 
 <div class="controls">
   <button onclick="prevMonth()">← 前月</button>
@@ -82,7 +82,12 @@ let currentDate = new Date();
 let records = JSON.parse(localStorage.getItem('medRecords')) || {};
 
 function saveRecords() { localStorage.setItem('medRecords', JSON.stringify(records)); }
-function getKey(d) { return d.toISOString().split('T')[0]; }
+function getKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 function markTaken(time) {
   const today = new Date();
@@ -116,7 +121,7 @@ function renderCalendar() {
     if (rec.morning) stars += '★';
     if (rec.evening) stars += '★';
 
-    const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
+    const isToday = date === today.getDate() && m === today.getMonth() && y === today.getFullYear();
 
     html += `<div class="day${isToday ? ' today' : ''}">
       <div class="day-num">${d}</div>
