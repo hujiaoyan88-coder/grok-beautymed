@@ -2,119 +2,104 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>💊 Grok 服薬カレンダー</title>
+<title>💊 服薬カレンダー</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-  :root {
-    --grok-blue: #00d4ff;
-    --grok-purple: #a855f7;
-  }
-  
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
     padding: 12px;
     background: linear-gradient(135deg, #0a0a0a, #1a0033);
     color: #e0e0e0;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    min-height: 100vh;
   }
   
   h1 {
-    font-size: 24px;
-    margin: 8px 0 4px;
     text-align: center;
-    background: linear-gradient(90deg, var(--grok-blue), var(--grok-purple));
+    font-size: 26px;
+    margin: 12px 0 6px;
+    background: linear-gradient(90deg, #00d4ff, #a855f7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   
   .subtitle { 
     text-align: center; 
-    color: #888; 
-    font-size: 13px; 
-    margin-bottom: 10px; 
+    color: #aaa; 
+    font-size: 14px; 
+    margin-bottom: 12px; 
   }
 
   .controls {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin: 8px 0;
+    justify-content: space-between;
+    margin: 12px 0;
+    padding: 0 10px;
   }
   
-  button {
-    padding: 8px 14px;
-    font-size: 14px;
-  }
-
   .calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
-    background: #111;
-    padding: 8px;
+    background: #111111;
+    padding: 10px;
     border-radius: 16px;
-    border: 1px solid rgba(0, 212, 255, 0.2);
-    flex: 1;
-    overflow: hidden;
+    border: 1px solid rgba(0, 212, 255, 0.25);
+    margin-bottom: 16px;
   }
   
   .day-header {
+    text-align: center;
     padding: 6px 2px;
-    font-size: 12px;
-    font-weight: bold;
-    color: var(--grok-blue);
+    font-size: 12.5px;
+    color: #00d4ff;
   }
   
   .day {
-    padding: 6px 2px;
-    min-height: 58px;
+    background: #1a1a1a;
     border-radius: 12px;
-    font-size: 13px;
+    padding: 6px 4px;
+    text-align: center;
+    min-height: 62px;
   }
   
-  .day-num {
-    font-size: 16px;
-    margin-bottom: 4px;
-  }
+  .day-num { font-size: 16px; font-weight: bold; margin-bottom: 4px; }
   
   .stars {
-    font-size: 22px;
+    font-size: 23px;
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: 4px;
-    min-height: 24px;
+    min-height: 26px;
   }
   
   .action-btn {
-    padding: 13px;
-    font-size: 15.5px;
-    margin: 8px 0 0;
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
     border-radius: 9999px;
+    margin: 8px 0;
+    background: linear-gradient(90deg, #00d4ff, #a855f7);
+    color: white;
+    border: none;
   }
 </style>
 </head>
 <body>
 <h1>服薬カレンダー</h1>
-<p class="subtitle">Grokと守る あなたの健康スケジュール</p>
+<p class="subtitle">Grokと美容内服頑張ろうぜ！</p>
 
 <div class="controls">
   <button onclick="prevMonth()">← 前月</button>
-  <span id="monthTitle" style="font-size:17px; min-width:110px; text-align:center;"></span>
+  <span id="monthTitle" style="font-size:19px; font-weight:bold;"></span>
   <button onclick="nextMonth()">次月 →</button>
 </div>
 
 <div id="calendar" class="calendar"></div>
 
-<div>
-  <button class="action-btn" onclick="markTaken('morning')">🌅 朝 飲んだ！ ★</button>
-  <button class="action-btn" onclick="markTaken('evening')">🌙 夜 飲んだ！ ★</button>
-</div>
+<button class="action-btn" onclick="markTaken('morning')">🌅 朝 飲んだ！ ★</button>
+<button class="action-btn" onclick="markTaken('evening')">🌙 夜 飲んだ！ ★</button>
 
 <script>
 let currentDate = new Date();
@@ -155,10 +140,12 @@ function renderCalendar() {
     if (dayRecord.morning) starsHTML += '★';
     if (dayRecord.evening) starsHTML += '★';
     
-    const isToday = day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
+    const isToday = day === new Date().getDate() && 
+                    month === new Date().getMonth() && 
+                    year === new Date().getFullYear();
     
     html += `
-      <div class="day ${isToday ? 'today' : ''}">
+      <div class="day ${isToday ? 'today' : ''}" style="${isToday ? 'background:#1e3a5f;border:1px solid #00d4ff;' : ''}">
         <div class="day-num">${day}</div>
         <div class="stars">${starsHTML || '<span style="color:#555;">ー</span>'}</div>
       </div>`;
