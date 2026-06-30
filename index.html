@@ -79,12 +79,12 @@ function getKey(d) { return d.toISOString().split('T')[0]; }
 function getToday() { return new Date(); }
 
 function markTaken(time) {
-  const today = getToday();
-  const key = getKey(today);
+  const key = getKey(currentDate);
   if (!records[key]) records[key] = {};
   records[key][time] = true;
   saveRecords();
   renderCalendar();
+  alert(`🚀 ${time === 'morning' ? '朝' : '夜'}の記録完了！ Grokが認めたよ`);
 }
 
 function renderCalendar() {
