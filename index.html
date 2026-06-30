@@ -33,16 +33,12 @@
     background: #0f0a1f; padding: 14px; border-radius: 20px;
     border: 1px solid rgba(103, 232, 249, 0.2);
   }
-  .day-header {
-    text-align: center; padding: 10px 4px; font-size: 13px; 
-    color: #67e8f9; font-weight: 600; background: rgba(0,0,0,0.3); border-radius: 10px;
-  }
+  .day-header { text-align: center; padding: 10px 4px; font-size: 13px; color: #67e8f9; font-weight: 600; background: rgba(0,0,0,0.3); border-radius: 10px; }
   
   .day {
     background: #1a1428; border-radius: 16px; padding: 10px 6px;
     text-align: center; aspect-ratio: 1 / 1;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    transition: all 0.25s;
   }
   .day.today {
     background: #1e1433 !important; 
@@ -55,8 +51,8 @@
   .action-btn {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     width: 90%; max-width: 420px; padding: 18px; font-size: 17px;
-    border-radius: 9999px; border: none; font-weight: 700;
-    color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    border-radius: 9999px; border: none; font-weight: 700; color: white;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
   }
   .morning { background: linear-gradient(90deg, #f59e0b, #ec4899); }
   .evening { background: linear-gradient(90deg, #6366f1, #a855f7); }
@@ -64,7 +60,7 @@
 </head>
 <body>
 <h1>服薬カレンダー</h1>
-<p class="subtitle">Grokと美容内服頑張ろうぜ！</p>
+<p class="subtitle">Grokと守る あなたの健康スケジュール</p>
 
 <div class="controls">
   <button onclick="prevMonth()">← 前月</button>
@@ -81,13 +77,15 @@
 let currentDate = new Date();
 let records = JSON.parse(localStorage.getItem('medRecords')) || {};
 
-function saveRecords() { localStorage.setItem('medRecords', JSON.stringify(records)); }
+// 日本時間ベースの日付キーを作成（ズレ防止）
 function getKey(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+
+function saveRecords() { localStorage.setItem('medRecords', JSON.stringify(records)); }
 
 function markTaken(time) {
   const today = new Date();
@@ -96,7 +94,6 @@ function markTaken(time) {
   records[key][time] = true;
   saveRecords();
   renderCalendar();
-  alert(`✅ ${time === 'morning' ? '朝' : '夜'}飲んだな。よくやった雑魚`);
 }
 
 function renderCalendar() {
@@ -107,21 +104,18 @@ function renderCalendar() {
   const daysInMonth = new Date(y, m+1, 0).getDate();
 
   let html = '';
-  ['日','月','火','水','木','金','土'].forEach(h => {
-    html += `<div class="day-header">${h}</div>`;
-  });
+  ['日','月','火','水','木','金','土'].forEach(h => html += `<div class="day-header">${h}</div>`);
 
   for (let i = 0; i < firstDay; i++) html += `<div class="day"></div>`;
 
   const today = new Date();
   for (let d = 1; d <= daysInMonth; d++) {
-    const key = getKey(new Date(y, m, d));
+    const dateObj = new Date(y, m, d);
+    const key = getKey(dateObj);
     const rec = records[key] || {};
-    let stars = '';
-    if (rec.morning) stars += '★';
-    if (rec.evening) stars += '★';
+    let stars = (rec.morning ? '★' : '') + (rec.evening ? '★' : '');
 
-    const isToday = date === today.getDate() && m === today.getMonth() && y === today.getFullYear();
+    const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
 
     html += `<div class="day${isToday ? ' today' : ''}">
       <div class="day-num">${d}</div>
