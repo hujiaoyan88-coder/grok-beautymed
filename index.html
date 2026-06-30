@@ -30,15 +30,29 @@
     border: 1px solid rgba(0,212,255,0.25);
   }
   .day-header { text-align: center; padding: 8px 2px; font-size: 13px; color: #00d4ff; }
+  
   .day {
     background: #1a1a1a; border-radius: 12px; padding: 8px 4px;
-    text-align: center; min-height: 72px;
+    text-align: center; 
+    aspect-ratio: 1 / 1;           /* 正方形固定 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 78px;              /* サイズ固定 */
   }
   .day.today {
-    background: #1e3a5f !important; border: 2px solid #00d4ff; transform: scale(1.05);
+    background: #1e3a5f !important; border: 2px solid #00d4ff;
   }
-  .day-num { font-size: 17px; font-weight: bold; }
-  .stars { font-size: 26px; margin-top: 4px; }
+  .day-num { font-size: 17px; font-weight: bold; margin-bottom: 4px; }
+  
+  .stars {
+    font-size: 26px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+  }
 
   .action-btn {
     width: 100%; padding: 18px; font-size: 17px; margin: 12px 0;
@@ -93,14 +107,18 @@ function renderCalendar() {
 
   const today = new Date();
   for (let d = 1; d <= daysInMonth; d++) {
+    const dateKey = getKey(new Date(y, m, d));
+    const rec = records[dateKey] || {};
+    
+    let starsHTML = '';
+    if (rec.morning) starsHTML += '★';
+    if (rec.evening) starsHTML += '★';
+
     const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
-    const key = getKey(new Date(y, m, d));
-    const rec = records[key] || {};
-    const stars = (rec.morning ? '★' : '') + (rec.evening ? '★' : '');
 
     html += `<div class="day${isToday ? ' today' : ''}">
       <div class="day-num">${d}</div>
-      <div class="stars">${stars || '<span style="color:#555;">ー</span>'}</div>
+      <div class="stars">${starsHTML || '<span style="color:#555;">ー</span>'}</div>
     </div>`;
   }
   document.getElementById('calendar').innerHTML = html;
