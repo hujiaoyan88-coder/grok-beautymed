@@ -99,6 +99,7 @@ function markTaken(time) {
   records[key][time] = true;
   saveRecords();
   renderCalendar();
+  alert(`✅ ${time === 'morning' ? '朝' : '夜'}飲んだな。よくやった雑魚`);
 }
 
 function renderCalendar() {
