@@ -5,59 +5,76 @@
 <title>💊 服薬カレンダー</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-  body {
+    body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    margin: 0; padding: 16px 12px 100px;
+    margin: 0; padding: 14px 10px 90px;
     background: linear-gradient(180deg, #0a001f, #1a0033);
     color: #e0e0e0; min-height: 100vh;
   }
   h1 {
-    text-align: center; font-size: 28px; margin: 8px 0 4px;
+    text-align: center; font-size: 26px; margin: 8px 0 4px;
     background: linear-gradient(90deg, #00f0ff, #c026d3);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
-  .subtitle { text-align: center; color: #aaa; font-size: 13.5px; margin-bottom: 20px; }
+  .subtitle { text-align: center; color: #aaa; font-size: 13px; margin-bottom: 18px; }
 
   .controls {
     display: flex; align-items: center; justify-content: space-between;
-    margin: 20px 0; padding: 0 10px;
+    margin: 18px 0; padding: 0 8px;
   }
   .controls button {
     background: rgba(0, 240, 255, 0.1); color: #67e8f9;
-    border: 1px solid #67e8f9; padding: 10px 20px; border-radius: 9999px;
-    font-weight: 600;
+    border: 1px solid #67e8f9; padding: 9px 18px; border-radius: 9999px;
+    font-size: 15px; font-weight: 600;
   }
 
   .calendar {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
-    background: #0f0a1f; padding: 14px; border-radius: 20px;
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+    background: #0f0a1f; padding: 12px; border-radius: 18px;
     border: 1px solid rgba(103, 232, 249, 0.2);
   }
-  .day-header { text-align: center; padding: 10px 4px; font-size: 13px; color: #67e8f9; font-weight: 600; background: rgba(0,0,0,0.3); border-radius: 10px; }
+  .day-header { 
+    text-align: center; padding: 8px 2px; font-size: 12.5px; 
+    color: #67e8f9; font-weight: 600; background: rgba(0,0,0,0.3); border-radius: 8px; 
+  }
   
   .day {
-    background: #1a1428; border-radius: 16px; padding: 8px 4px;
-    text-align: center; aspect-ratio: 1 / 1;
-    display: flex; flex-direction: column; justify-content: center; align-items: center,
-      min-height: 82px;
+    background: #1a1428; border-radius: 14px; 
+    padding: 6px 4px;
+    text-align: center; 
+    aspect-ratio: 1 / 1;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    min-height: 74px;
+    box-sizing: border-box;
   }
   .day.today {
     background: #1e1433 !important; 
     border: 2px solid #67e8f9; 
-    box-shadow: 0 0 15px rgba(103, 232, 249, 0.6);
+    box-shadow: 0 0 12px rgba(103, 232, 249, 0.6);
   }
-  .day-num { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
-  .stars { font-size: 28px; display: flex; gap: 6px; 
-         width: 100%, height: 32px}
+  .day-num { font-size: 16.5px; font-weight: bold; margin-bottom: 4px; }
+
+  .stars {
+    font-size: 24px; 
+    display: flex; 
+    gap: 3px; 
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+    height: 28px;
+    overflow: hidden;
+  }
 
   .action-area {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 420px; display: flex; flex-direction: column; gap: 12px;
-    z-index: 10;
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    width: 92%; max-width: 380px; display: flex; flex-direction: column; gap: 10px;
   }
   .action-btn {
-    padding: 18px; font-size: 17px; border-radius: 9999px; border: none;
-    font-weight: 700; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    padding: 16px; font-size: 16.5px; border-radius: 9999px; border: none;
+    font-weight: 700; color: white; box-shadow: 0 6px 20px rgba(0,0,0,0.4);
     width: 100%;
   }
   .morning { background: linear-gradient(90deg, #f59e0b, #ec4899); }
