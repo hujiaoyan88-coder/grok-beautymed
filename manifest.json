@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "服薬カレンダー",
+  "short_name": "服薬カレンダー",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a001f",
+  "theme_color": "#14120e",
+  "icons": [
+    {
+      "src": "./grok-beautymed.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
